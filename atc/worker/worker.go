@@ -639,6 +639,10 @@ func (worker *gardenWorker) cloneRemoteVolumes(
 		return nil, err
 	}
 
+	if len(nonLocals) > 0{
+		logger.Debug("streamed-non-local-volumes", lager.Data{"volumes-streamed": len(nonLocals)})
+	}
+
 	return mounts, nil
 }
 
