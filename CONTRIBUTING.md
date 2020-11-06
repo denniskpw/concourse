@@ -497,6 +497,8 @@ interface. To do so, you'll need to install `counterfeiter` as follows:
 $ go get -u github.com/maxbrunsfeld/counterfeiter/v6
 ```
 
+We also use [mockery](https://github.com/vektra/mockery). Follow [their installation steps](https://github.com/vektra/mockery#installation) for your platform.
+
 You can then generate the fakes by running
 
 ```sh
