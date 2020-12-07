@@ -3,6 +3,8 @@ package auditor
 import (
 	"fmt"
 	"net/http"
+	"net/url"
+	"strings"
 
 	"code.cloudfoundry.org/lager"
 	"github.com/concourse/concourse/atc"
@@ -165,6 +167,22 @@ func (a *auditor) ValidateAction(action string) bool {
 func (a *auditor) Audit(action string, userName string, r *http.Request) {
 	err := r.ParseForm()
 	if err == nil && a.ValidateAction(action) {
-		a.logger.Info("audit", lager.Data{"action": action, "user": userName, "parameters": r.Form})
+		f := transformForm(r.Form)
+		a.logger.Info("audit", lager.Data{"action": action, "user": userName, "parameters": f})
 	}
+}
+
+// transform takes a request and removes the leading `:` character from
+// the Form field
+func transformForm(f url.Values) url.Values {
+	// iterate through the form
+	v := url.Values{}
+	for key, value := range f {
+		k := key
+		if strings.HasPrefix(key, ":") {
+			k = key[1:]
+		}
+		v[k] = value
+	}
+	return v
 }
